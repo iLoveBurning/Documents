@@ -1,0 +1,154 @@
+1、设置当前系统时间为2016年1月1日
+2、查看系统时间并以  2015-11-25格式进行显示
+3、设置服务器1个小时之后自动关机
+4、设置服务器开机运行级别为第三运行级别
+5、查看当前服务器的运行级别，并对查看到的信息进行解释说明
+
+---------------------------------
+/根分区
+/etc  配置文件
+/boot 存放Linux系统启动时需要加载的文件
+/var  是一个可增长的目录，包含很经常变的文件
+/root  管理员的家目录
+/tmp  临时文件存储位置
+/bin  命令  此目录包含二进制可执行文件
+/sbin  系统命令 ，此目录中的命令主要供系统管理员使用，以进行系统维护
+/mnt - 挂载目录  挂载点，系统管理员可用于临时挂载文件系统
+/dev 设备文件
+/home  普通用户所有数据存放在这个目录下 
+/proc 这个目录是一个虚拟的目录，它是系统内存的映射，我们可以通过直接访问这个目录来获取系统信息
+/lib 这个目录里存放着系统最基本的动态链接共享库，其作用类似于Windows里的.dll文件。几乎所有的应用程序都须要用到这些共享库
+
+
+---------------------------------
+给Linux磁盘分区
+[root@xuegod60 ~]# fdisk /dev/sdb					#指定分区的设备
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+
+Command (m for help): n							#创建一个新的分区
+Partition type:
+   p   primary (2 primary, 0 extended, 2 free)			#创建主分区
+   e   extended									#创建扩展分区
+Select (default p):
+Using default response p
+Partition number (3,4, default 3):					#指定分区号
+First sector (25593856-41943039, default 25593856):	#指定分区的开始柱面
+Using default value 25593856
+Last sector, +sectors or +size{K,M,G} (25593856-41943039, default 41943039): +1G	#指定分区大小
+Partition 3 of type Linux and of size 1 GiB is set
+
+Command (m for help): p							#打印分区表
+
+Disk /dev/sda: 21.5 GB, 21474836480 bytes, 41943040 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x00083333
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1        25593856    27691007     1048576   83  Linux
+
+Command (m for help): w							#保存
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+
+WARNING: Re-reading the partition table failed with error 16: Device or resource busy.
+The kernel still uses the old table. The new table will be used at
+the next reboot or after you run partprobe(8) or kpartx(8)
+Syncing disks.
+
+重新获取分区表
+ls /dev/sdb*
+/dev/sdb  
+partprobe /dev/sdb
+ls /dev/sdb*
+/dev/sdb  /dev/sdb1 
+格式化分区，并进行挂载
+mkfs.xfs /dev/sdb1					#格式化分区
+mkdir /sdb1						#创建挂载点
+mount /dev/sdb1 /sdb1/			#挂载
+
+---------------------------------
+Yum源
+/etc/yum.repos.d/rhel7.repo 
+[rhel7-source]
+name=rhel7-source
+baseurl=file:///mnt
+enabled=1
+gpgcheck=0
+
+
+
+---------------------------------
+Terminal： 终端     
+network-scripts 网络脚本   
+passwd 密码文件 
+nologin 禁止登录    
+shutdown 关机   
+reboot 重启   
+poweroff  关机
+Grep 过滤     
+localhost 本机     
+useradd  添加用户   
+graphical  图形
+
+---------------------------------
+使用ssh远程，查看pts
+ssh  root@127.0.0.1
+ps -aux | grep pts
+tty控制台终端
+pts虚拟终端，pts(pseudo-terminal slave)
+pts(pseudo-terminal slave)  伪终端 ：通过ssh相关工具连接上后，显示出来终端为：pts
+
+---------------------------------
+# rootShell提示符：
+$普通用户Shell提示符：
+---------------------------------
+shell的作用：
+Shell:解释器
+用户   ----shell  -----内核—硬件
+
+---------------------------------
+查看所有的解释器：
+cat /etc/shells
+
+---------------------------------
+Pwd命令
+当前的工作目录
+查看网卡的工作目录
+cd /etc/sysconfig/network-scripts/
+pwd
+
+---------------------------------
+查看系统时间
+date
+date +%Y-%m-%d   
+
+更改时间  date -s 具体的时间
+
+查看Bios时间
+hwclock
+---------------------------------
+shutdown -r  重启
+shutdown -h  关机
+shutdown -h 时间  指定在某个时间关机
+ctrl+c 或者shutdown -c 取消之前的关机操作
+
+---------------------------------
+init 命令  切换系统运行级别
+Linux 的7个启动级别：
+0 系统停机模式，系统默认运行级别不能设置为0，否则不能正常启动，机器关闭。关机
+1 单用户模式，root权限，用于系统维护，禁止远程登陆，就像Windows下的安全模式登录。字符界面
+2 多用户模式，没有NFS网络支持。 字符界面 不能上网
+3 完整的多用户文本模式，有NFS，登陆后进入控制台命令行模式。 完整字符
+4 系统未使用，保留一般不用，在一些特殊情况下可以用它来做一些事情。例如在笔记本电脑的电池用尽时，可以切换到这个模式来做一些设置。
+5 图形化模式，登陆后进入图形GUI模式，X Window系统。  
+6 重启模式，默认运行级别不能设为6，否则不能正常启动。运行init 6机器就会重启。
+
+---------------------------------
