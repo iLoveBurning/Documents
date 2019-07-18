@@ -1,0 +1,61 @@
+作业：
+1、安装mariadb-server 软件包
+2、安装httpd  软件包
+3、安装nginx 软件包
+----------------------------------
+挂载光盘
+umount /dev/sr0   卸载
+mount /dev/sr0 /mnt/   挂载
+----------------------------------
+查看某个软件是否安装
+rpm -qa | grep httpd
+查看某个包是否安装
+rpm -q php
+----------------------------------
+配置yum源的配置文件
+rm -rf /etc/yum.repos.d/*
+vim /etc/yum.repos.d/rhel7.repo
+[rhel7-yum]					#yum源名称，唯一的，用来区分不同的yum源
+name=rhel7-source			        #对yum源描述信息
+baseurl=file:///mnt			        #yum源的路径（repodata目录所在的目录）
+enabled=1					#为1，表示启用yum源
+gpgcheck=0					#为1，使用公钥检验rpm的正确性
+
+----------------------------------
+ YUM使用：
+yum clean all		#清空yum缓存
+yum list			#生成列表
+yum install httpd		#安装软件包
+----------------------------------
+安装nginx服务器
+1.	上传nginx源码包
+(指定解压目录
+tar zxf nginx-1.6.0.tar.gz -C /usr/src/
+ cd /usr/src/nginx-1.6.0/
+ls
+ ./configure 安装路径--prefix=/usr/local/nginx 
+--user=nginx --group=nginx
+
+make -j 4
+make install
+/usr/local/nginx/sbin/nginx -t
+
+ln -s /usr/local/nginx/sbin/nginx  /usr/sbin/
+nginx -t
+nginx
+netstat -anlpt | grep nginx
+在浏览器看能否打开页面
+----------------------------------
+zip是压缩程序，unzip是解压程序
+
+程序是静态的（文件），进程是动态的（运行的程序）。
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+----------------------------------
+
+----------------------------------
